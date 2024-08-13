@@ -6,6 +6,7 @@ FuncOutline is an IDA plugin designed to optimize the readability of decompiled 
   - On Windows, the folder is at C:\Program Files (x86)\IDA 6.8\plugins
 
   - On Linux/macOS, the folder may be at /opt/ida-6.8/plugins/
+- funcOutline is confirmed to work on IDA Pro version 9.0+
 ### Usage
 - Select the "FuncOutlineUI" menu in Pseudocode view.
 - click "FuncOutline resume"
