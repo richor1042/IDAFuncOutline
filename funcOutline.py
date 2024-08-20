@@ -5,7 +5,7 @@ import idaapi
 import idc
 import re
 
-ins_num_limit=5
+ins_num_limit=7
 arm64_ins_space=4
 def set_outline_func_flag(func_addr):
     pfn = ida_funcs.get_func(func_addr)
@@ -21,9 +21,17 @@ def check_func(func_addr):
     #Limit the last instruction
     ins = idc.GetDisasm(end_ea-arm64_ins_space)
     opt_code = ins.split("             ")
-    if opt_code[0]!="B":
+    if (opt_code[0]!="B")and(opt_code[0]!="RET"):
+        print("last ins no rule",hex(func_addr))
         return False
     return True
+
+def is_hex_string(string):
+    try:
+        int(string, 16)
+        return True
+    except ValueError:
+        return False
 
 def visit_func(blk):
     pat = "_[0-9a-fA-f]+"
@@ -37,9 +45,10 @@ def visit_func(blk):
                 pat = "_[0-9a-fA-f]+"
                 tmpcont=re.findall(pat,opt_code[1])
                 func_son_addr=tmpcont[0][1:]
-                if check_func(int(func_son_addr,16)):
-                    # print("set_outline_func_flag", func_son_addr)
-                    set_outline_func_flag(int(func_son_addr,16))
+                if is_hex_string(func_son_addr):
+                    if check_func(int(func_son_addr,16)):
+                        # print("set_outline_func_flag", func_son_addr)
+                        set_outline_func_flag(int(func_son_addr,16))
 
         curr_addr = idc.next_head(curr_addr, blk.end_ea)
 
